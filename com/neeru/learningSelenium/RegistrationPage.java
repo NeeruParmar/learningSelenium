@@ -1,5 +1,6 @@
 package com.neeru.learningSelenium;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -7,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -31,7 +33,10 @@ public class RegistrationPage {
 	public void createAccount() {
 
 		WebElement email = wd.findElement(By.id("email_create"));
-		email.sendKeys("kav123@gmail.com");
+		Random string =new Random();
+		String randomemail= "email"+ string.nextDouble()+"@hotmail.com";
+		
+		email.sendKeys(randomemail);
 
 		WebElement createAccBtn = wd.findElement(By.id("SubmitCreate"));
 		createAccBtn.submit();
@@ -39,13 +44,13 @@ public class RegistrationPage {
 		wd.findElement(By.cssSelector("label[for='id_gender2']")).click();
 
 		WebElement firstName = wd.findElement(By.cssSelector("input[name='customer_firstname']"));
-		firstName.sendKeys("kavya");
+		firstName.sendKeys("Ria");
 
 		WebElement lastName = wd.findElement(By.cssSelector("input[name='customer_lastname']"));
 		lastName.sendKeys("Pathak");
 
 		WebElement password = wd.findElement(By.cssSelector("input[data-validate ='isPasswd']"));
-		password.sendKeys("kavya123");
+		password.sendKeys("Ria123");
 
 		WebElement dateSelect = wd.findElement(By.id("days"));
 
@@ -79,13 +84,13 @@ public class RegistrationPage {
 
 		WebElement state = wd.findElement(By.id("id_state"));
 
-		 Select selectState = new Select(state);
+		Select selectState = new Select(state);
 
 		selectState.selectByIndex(2);
 
 		WebElement pinCode = wd.findElement(By.cssSelector("input[name='postcode']"));
-		pinCode.sendKeys("909090");
-		
+		pinCode.sendKeys("00000");
+
 		WebElement additionalInfo = wd.findElement(By.cssSelector("textarea[name='other']"));
 		additionalInfo.sendKeys("notes");
 
@@ -94,14 +99,22 @@ public class RegistrationPage {
 
 		WebElement mobilePhone = wd.findElement(By.cssSelector("input[name= phone_mobile]"));
 		mobilePhone.sendKeys("101111111");
-		
+
 		WebElement register = wd.findElement(By.cssSelector("button[name=submitAccount]"));
+
+		register.click();
 		
-		register.submit();
+		WebElement getTextFromMessage = wd.findElement(By.className("header_user_info"));
+		String actualText=getTextFromMessage.getText();
+		Assert.assertEquals(actualText, "Ria Pathak", "Text doesn't match");
+		
+		
+
 	}
-		@AfterMethod
-		public void tearDown() {
-		wd.quit();
+
+	@AfterMethod
+	public void tearDown() {
+	wd.quit();
 
 	}
 }
