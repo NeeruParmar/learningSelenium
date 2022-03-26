@@ -52,8 +52,9 @@ public class Assignment {
 		loginBtn.click();
 
 		// Step two Asserting the name
-		assertEquals("Kavya Singh", "Kavya Singh");
-		System.out.println("Customer Name matched");
+		WebElement nameConfirmation = wd.findElement(By.cssSelector("a[class='account']"));
+		Assert.assertEquals(nameConfirmation.getText(), "Kavya Singh", "Not Logged In");
+		System.out.println("Welcome to your Account");
 
 		// Step Three
 		action = new Actions(wd);
@@ -68,40 +69,51 @@ public class Assignment {
 		wd.switchTo().frame(0);
 
 		// selecting quantity
-		WebElement quantity = wd.findElement(By.className("icon-plus"));
+		WebElement quantity = wd.findElement(By.cssSelector("i[class='icon-plus']"));
 		quantity.click();
 
 		// selecting size by using selectByValue
 		WebElement sizeSelect = wd.findElement(By.id("group_1"));
 
 		Select select = new Select(sizeSelect);
-
 		select.selectByValue("2");
 
-		// adding to cart after adding qty and size
 		WebElement addToCart = wd.findElement(By.cssSelector("button[name='Submit']"));
 		addToCart.click();
+		
+		 wd.switchTo().defaultContent();
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Asserting the order confirmation, product, qty
+		WebElement orderConfirmationMessage=wd.findElement(By.className("icon-ok"));
+		Assert.assertEquals("Product successfully added to your shopping cart","Product successfully added to your shopping cart", "not added correctly");
+		System.out.println("Product selected correctly");
+		
+		WebElement productName = wd.findElement(By.id("layer_cart_product_title"));
+		Assert.assertEquals(productName.getText(), "Faded Short Sleeve T-shirts", "Wrong prduct selected");
+		System.out.println("product description is correct");
 
-		// Switching back to default page
-		wd.switchTo().defaultContent();
-
-		// Asserting the shopping cart: product, qty
-		Assert.assertEquals("Product successfully added to your Shopping List",
-				"Product successfully added to your Shopping List");
-		Assert.assertEquals("Faded Short Sleeve T-shirts", "Faded Short Sleeve T-shirts");
-		System.out.println("Correct Product selected");
-
-		Assert.assertEquals("Quantity 2", "Quantity 2");
-		System.out.println("Correct number of items selected");
-
-		WebElement verifyOrderDetailscheckOut = wd.findElement(By.cssSelector("[title='Proceed to checkout']"));
+	   WebElement quantityConfirmation = wd.findElement(By.cssSelector("span[id='layer_cart_product_quantity']"));
+	   Assert.assertEquals(quantity.getText(), "2");
+	   System.out.println("Corrected Quantity selected");
+	   
+	  
+	   WebElement verifyOrderDetailscheckOut = wd.findElement(By.cssSelector("[title='Proceed to checkout']"));
 		verifyOrderDetailscheckOut.click();
-
-		Assert.assertEquals("35.02", "35.02");
-		System.out.println("total amt is accuarte without tax");
-
-		// aser of total need to added
-
+			
+		//Asserting total cost
+		  WebElement totalPrice=wd.findElement(By.cssSelector("span[id='total_price']"));
+		  Assert.assertEquals(totalPrice.getText(), "36.42", "cost not accurate");
+		  System.out.println("total amt is accurate ");
+		  
+		  
+		
 		WebElement verifyOrderCostcheckOut = wd
 				.findElement(By.cssSelector("div [class='button btn btn-default standard-checkout button-medium']"));
 		verifyOrderCostcheckOut.click();
@@ -127,14 +139,17 @@ public class Assignment {
 		paymentByBankWire.click();
 
 		// Asserting payment method Text
-		Assert.assertEquals("BANK-WIRE PAYMENT", "BANK-WIRE PAYMENT");
+		WebElement paymentMethod=wd.findElement(By.className("page-subheading"));
+		Assert.assertEquals("BANK-WIRE PAYMENT", "BANK-WIRE PAYMENT", "incorrect info");
 		System.out.println("you have choosen to pay by the bank wire");
 
 		// Confirming the order and asserting with text confirmation
 		WebElement confirmMyOrder = wd
 				.findElement(By.cssSelector("button[class='button btn btn-default button-medium']"));
 		confirmMyOrder.click();
-		Assert.assertEquals("Your order on My Store is complete", "Your order on My Store is complete");
+		
+		WebElement finalConfirmation=wd.findElement(By.className("cheque-indent"));
+		Assert.assertEquals("Your order on My Store is complete", "Your order on My Store is complete", "Order not Complete");
 		System.out.println("order Complete go back to place another order ");
 	}
 
